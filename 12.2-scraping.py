@@ -19,6 +19,8 @@ for tag in tags:
    print 'Attrs:',tag.attrs
 You need to adjust this code to look for span tags and pull out the text content of the span tag,
 convert them to integers and add them up to complete the assignment.
+
+http://py4e-data.dr-chuck.net/comments_2151234.html
 """
 
 from urllib.request import urlopen
@@ -30,15 +32,20 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-url = input('Enter - ')
+url = input('Enter URL: ')
 html = urlopen(url, context=ctx).read()
 soup = BeautifulSoup(html, "html.parser")
 
-# Retrieve all of the anchor tags
-tags = soup('a')
+# Retrieve all <span> tags
+tags = soup('span')
+
+total_sum = 0  # Initialize sum
+
 for tag in tags:
-    # Look at the parts of a tag
-    print('TAG:', tag)
-    print('URL:', tag.get('href', None))
-    print('Contents:', tag.contents[0])
-    print('Attrs:', tag.attrs)
+    try:
+        num = int(tag.text)  # Extract number from tag and convert to integer
+        total_sum += num  # Add to total sum
+    except ValueError:
+        pass  # Ignore non-numeric content
+
+print("Sum of numbers in <span> tags:", total_sum)
